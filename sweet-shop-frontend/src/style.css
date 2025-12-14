@@ -1,0 +1,191 @@
+/* ===== Design Tokens ===== */
+:root {
+--bg: #0f172a;            /* slate-900 */
+--panel: #020617;         /* slate-950 */
+--card: #020617;
+--border: #1e293b;        /* slate-800 */
+--text: #e5e7eb;          /* gray-200 */
+--muted: #9ca3af;         /* gray-400 */
+--brand: #ec4899;         /* pink-500 */
+--brand-600: #db2777;     /* pink-600 */
+--success: #22c55e;
+--danger: #ef4444;
+--radius: 14px;
+--radius-sm: 10px;
+--shadow: 0 20px 40px rgba(0,0,0,.45);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+margin: 0;
+background: radial-gradient(1200px 600px at 10% -10%, #1f2937 0%, transparent 60%),
+radial-gradient(1200px 600px at 90% -10%, #1f2937 0%, transparent 60%),
+var(--bg);
+color: var(--text);
+font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+}
+
+/* ===== Auth ===== */
+.login-wrapper {
+min-height: 100vh;
+display: grid;
+place-items: center;
+}
+
+.login-card {
+width: 360px;
+background: linear-gradient(180deg, rgba(236,72,153,.12), transparent 60%), var(--panel);
+border: 1px solid var(--border);
+border-radius: var(--radius);
+padding: 32px 28px;
+box-shadow: var(--shadow);
+}
+
+.login-card h2 {
+margin: 0 0 18px;
+text-align: center;
+color: var(--brand);
+letter-spacing: .3px;
+}
+
+.login-card input {
+width: 100%;
+padding: 12px 14px;
+margin: 10px 0;
+background: #020617;
+color: var(--text);
+border: 1px solid var(--border);
+border-radius: var(--radius-sm);
+outline: none;
+}
+
+.login-card input:focus { border-color: var(--brand); }
+
+.login-card button {
+width: 100%;
+margin-top: 14px;
+padding: 12px 16px;
+background: linear-gradient(135deg, var(--brand), var(--brand-600));
+color: white;
+border: none;
+border-radius: var(--radius-sm);
+cursor: pointer;
+font-weight: 600;
+}
+
+/* ===== Layout ===== */
+.dashboard { max-width: 1200px; margin: 0 auto; padding: 28px; }
+
+header {
+display: flex;
+align-items: center;
+justify-content: space-between;
+margin-bottom: 22px;
+}
+
+header h1 { color: var(--brand); margin: 0; }
+
+.logout {
+background: transparent;
+border: 1px solid var(--border);
+color: var(--muted);
+padding: 8px 12px;
+border-radius: var(--radius-sm);
+cursor: pointer;
+}
+
+/* ===== Controls ===== */
+.search {
+width: 100%;
+padding: 14px 16px;
+background: #020617;
+border: 1px solid var(--border);
+color: var(--text);
+border-radius: var(--radius-sm);
+}
+
+.admin-form {
+display: grid;
+grid-template-columns: repeat(5, 1fr);
+gap: 10px;
+margin: 22px 0;
+}
+
+.admin-form input {
+padding: 12px 14px;
+background: #020617;
+border: 1px solid var(--border);
+color: var(--text);
+border-radius: var(--radius-sm);
+}
+
+.admin-form button {
+background: linear-gradient(135deg, #22c55e, #16a34a);
+color: white;
+border: none;
+border-radius: var(--radius-sm);
+cursor: pointer;
+font-weight: 600;
+}
+
+/* ===== Grid ===== */
+.grid {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+gap: 20px;
+}
+
+.card {
+background: linear-gradient(180deg, rgba(236,72,153,.06), transparent 50%), var(--card);
+border: 1px solid var(--border);
+border-radius: var(--radius);
+padding: 18px;
+box-shadow: var(--shadow);
+transition: transform .15s ease, box-shadow .15s ease;
+}
+
+.card:hover { transform: translateY(-2px); box-shadow: 0 26px 60px rgba(0,0,0,.6); }
+
+.category { color: var(--muted); font-size: 13px; }
+
+.meta {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin: 12px 0;
+}
+
+.in { color: var(--success); font-weight: 600; }
+.out { color: var(--danger); font-weight: 600; }
+
+.actions { display: flex; gap: 8px; }
+
+.actions button {
+flex: 1;
+padding: 10px 12px;
+border-radius: var(--radius-sm);
+border: none;
+cursor: pointer;
+background: linear-gradient(135deg, var(--brand), var(--brand-600));
+color: white;
+font-weight: 600;
+}
+
+.actions button:disabled {
+background: #374151;
+cursor: not-allowed;
+}
+
+.delete {
+background: transparent;
+border: 1px solid var(--border);
+color: var(--danger);
+flex: 0;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 720px) {
+.admin-form { grid-template-columns: 1fr; }
+.dashboard { padding: 18px; }
+}

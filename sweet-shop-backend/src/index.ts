@@ -66,7 +66,7 @@ const adminOnly = (req: any, res: Response, next: NextFunction) => {
 // --- ROUTES ---
 
 // 1. Auth Routes
-app.post('/api/auth/register', async (req, res) => {
+app.post('/api/auth/register', async (req: Request, res: Response) => {
   try {
     const { email, password, role } = req.body;
     const salt = await bcrypt.genSalt(10);
@@ -79,7 +79,7 @@ app.post('/api/auth/register', async (req, res) => {
   }
 });
 
-app.post('/api/auth/login', async (req, res) => {
+app.post('/api/auth/login', async (req: Request, res: Response) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
   if (!user) return res.status(400).send('Email not found');
@@ -92,23 +92,25 @@ app.post('/api/auth/login', async (req, res) => {
 });
 
 // 2. Sweet Routes
-app.get('/api/sweets', auth, async (req, res) => {
+app.get('/api/sweets', auth, async (req: Request, res: Response) => {
   const sweets = await Sweet.find();
   res.send(sweets);
 });
 
-app.get('/api/sweets/search', auth, async (req, res) => {
-  const { query } = req.query; // Simple search by name or category
-  const sweets = await Sweet.find({
+app.get('/api/sweets/search', auth, async (req: Request, res: Response) => {
+  const { query } = req.query; 
+  // Cast query object to 'any' to bypass strict TS check on $or
+  const searchCriteria: any = {
     $or: [
       { name: { $regex: query, $options: 'i' } },
       { category: { $regex: query, $options: 'i' } }
     ]
-  });
+  };
+  const sweets = await Sweet.find(searchCriteria);
   res.send(sweets);
 });
 
-app.post('/api/sweets', auth, adminOnly, async (req, res) => {
+app.post('/api/sweets', auth, adminOnly, async (req: Request, res: Response) => {
   const sweet = new Sweet(req.body);
   try {
     await sweet.save();
@@ -118,7 +120,7 @@ app.post('/api/sweets', auth, adminOnly, async (req, res) => {
   }
 });
 
-app.put('/api/sweets/:id', auth, adminOnly, async (req, res) => {
+app.put('/api/sweets/:id', auth, adminOnly, async (req: Request, res: Response) => {
   try {
     const updated = await Sweet.findByIdAndUpdate(req.params.id, req.body, { new: true });
     res.send(updated);
@@ -127,13 +129,13 @@ app.put('/api/sweets/:id', auth, adminOnly, async (req, res) => {
   }
 });
 
-app.delete('/api/sweets/:id', auth, adminOnly, async (req, res) => {
+app.delete('/api/sweets/:id', auth, adminOnly, async (req: Request, res: Response) => {
   await Sweet.findByIdAndDelete(req.params.id);
   res.send({ message: 'Sweet deleted' });
 });
 
 // 3. Inventory Routes
-app.post('/api/sweets/:id/purchase', auth, async (req, res) => {
+app.post('/api/sweets/:id/purchase', auth, async (req: Request, res: Response) => {
   const sweet = await Sweet.findById(req.params.id);
   if (!sweet) return res.status(404).send('Sweet not found');
   if (sweet.quantity < 1) return res.status(400).send('Out of stock');
@@ -143,7 +145,7 @@ app.post('/api/sweets/:id/purchase', auth, async (req, res) => {
   res.send({ message: 'Purchase successful', sweet });
 });
 
-app.post('/api/sweets/:id/restock', auth, adminOnly, async (req, res) => {
+app.post('/api/sweets/:id/restock', auth, adminOnly, async (req: Request, res: Response) => {
   const { amount } = req.body;
   const sweet = await Sweet.findById(req.params.id);
   if (!sweet) return res.status(404).send('Sweet not found');
@@ -157,8 +159,9 @@ app.post('/api/sweets/:id/restock', auth, adminOnly, async (req, res) => {
 const PORT = process.env.PORT || 5000;
 mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/sweetshop')
   .then(() => {
-    app.listen(PORT, () => console.log(Server running on port ${PORT}));
+    // FIXED: Added backticks for template literal
+    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
   })
   .catch(err => console.log(err));
 
-export default app; // Export for testing
+export default app;
